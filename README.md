@@ -1,26 +1,48 @@
 # Data Centralisation Project
+In this project, our goal is to create a robust local PostgreSQL database, gather data from diverse sources, process it effectively, design a comprehensive database schema, and perform insightful SQL queries.
 
-In this project, we create a local PostgreSQL database. We upload data from various sources, process it, create a database schema and run SQL queries. 
-
-Key technologies used: Postgres, AWS (s3), boto3, rest-API, csv, Python (Pandas). 
+Key Technologies Used: PostgreSQL, AWS (S3), boto3, RESTful APIs, CSV files, and Python (especially Pandas).
 
 ## Project Utils
+1. Data Extraction
+In the data_extraction.py file, you'll find methods dedicated to fetching data into Pandas data frames from various sources.
+2. Data Cleaning
+The data_cleaning.py script features the DataCleaning class, which specializes in cleaning tables sourced from our data extraction.
+3. Database Upload
+The database_utils.py module introduces the DatabaseConnector class. This class facilitates the initiation of our database engine, leveraging credentials stored in a .yml configuration file.
+4. Database Upload Tool
+The main.py script offers methods for direct uploading of data into our local PostgreSQL database.
 
-1. Data extraction. In "data_extraction.py" we store methods responsible for the upload of data into pandas data frame from different sources. 
-2. Data cleaning. In "data_cleaning.py" we develop the class DataCleaning that clean different tables, which we uploaded in "data_extraction.py". 
-3. Uploading data into the database. We write DatabaseConnector class "database_utils.py", which initiates the database engine based on credentials provided in ".yml" file.
-4. "main.py" contains methods, which allow uploading data directly into the local database. 
+## Step-by-Step Data Processing
 
-## Step by Step Data Processing
-
-We have 6 sources of data. 
-
-1. Remote Postgres database in AWS Cloud. The table "order_table" is the data of the most interest for the client as it contains actual sales information. In the table, we need to use the following fields "date_uuid", "user_uuid", "card_number", "store_code", "product_code" and "product_quantity". The first 5 fields will become foreign keys in our database, therefore we need to clean these columns from all Nans and missing values. The "product_quantity" field has to be an integer.
-2. Remote Postgres database in AWS Cloud. The user's data  "dim_users" table. This table is also stored in the remote database, so we use the same upload technics as in the previous case. The primary key here is the "user_uuid" field.
-3. Public link in AWS cloud. The "dim_card_details" is accessible by a link from the s3 server and stored as a ".pdf" file. We handle reading ".pdf" using the "tabula" package. The primary key is the card number. The card number has to be converted into a string to avoid possible problems and cleaned from "?" artefacts.
-4. The AWS-s3 bucket. The "dim_product" table. We utilise the boto3 package to download this data. The primary key is the "product code" field. The field "product_price" has to be converted into float number and the field "weight" has to convert into grams concerning cases like ("kg", "oz", "l", "ml").
-5. The restful-API.  The "dim_store_details" data is available by the GET method. The ".json" response has to be converted into the pandas dataframe. The primary key field is "store_code".
-6. The "dim_date_times" data is available by link. The ".json" response has to be converted into the pandas datagrame. The primary key is "date_uuid".
+1. Remote PostgreSQL Database in AWS Cloud
+Table: order_table
+This table holds critical sales data (date_uuid, user_uuid, card_number, store_code, product_code, product_quantity).
+Cleaning involves addressing NaN and missing values.
+We'll convert product_quantity to integers.
+2. User Data from Remote PostgreSQL Database (AWS Cloud)
+Table: dim_users
+Utilizing similar upload techniques as before.
+The user_uuid serves as the primary key.
+3. Public Link in AWS Cloud
+Source: Public link for dim_card_details (stored as a .pdf file)
+Reading PDFs with the tabula package.
+Cleaning and converting card_number to strings, removing "?" artifacts.
+4. AWS S3 Bucket
+Source: dim_product table
+Leveraging boto3 to download data.
+The product_code acts as the primary key.
+Converting product_price to float numbers.
+Standardizing weight units (e.g., converting "kg", "oz", "l", "ml" to grams).
+5. RESTful API
+Source: Fetching dim_store_details data via a RESTful API.
+Converting JSON responses to Pandas data frames.
+Primary key: store_code.
+6. JSON Data via Links
+Source: Accessing dim_date_times data via links.
+Converting JSON responses to Pandas data frames.
+Primary key: date_uuid.
+By following these steps, we centralize and harmonize diverse data sources, ensuring a well-structured and meaningful PostgreSQL database for our analyses. This approach empowers us to derive valuable insights from the company's data landscape. 
 
 #### General Data Cleaning Notes
 
